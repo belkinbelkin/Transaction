@@ -1,0 +1,40 @@
+﻿@model IEnumerable<TransactionBelk.Models.Transaction>
+
+<table id="lowerTableResults">
+    @foreach (var transaction in Model) {
+        <tr>
+            <td class="emailwide">@transaction.sender</td>
+            <td class="emailwide">@transaction.receiver</td>
+            <td class="emailwide">@transaction.bankNumberSender</td>
+            <td class="emailwide">@transaction.emailSender</td>
+            <td>@transaction.phoneSender</td>
+            @if (transaction.User != null)
+            {
+                <td>@transaction.User.name</td>
+                <td class="datewide">@transaction.approvalTimestamp</td>
+            }else{
+                <td></td>
+                <td class="datewide"></td> }
+            @if (transaction.TransactionStatus != null)
+            {
+                <td>@transaction.TransactionStatus.label</td>
+            }else
+            {
+                <td> </td>
+            }
+            <td class="datewide">@transaction.createdTimestamp</td>
+            @if ((ViewBag.editable || ViewBag.isApprover) && transaction.TransactionStatus.code == 1)
+            {
+                <td><form method="get" action="/Home/EditTransaction/@transaction.id"><input type="submit" class="input-search high" value="Edit" /> </form></td>
+            }
+            else if (transaction.TransactionStatus.code == 3)
+            {
+                <td><form method="get" action="/Home/GetFile/@transaction.id"><input type="submit" class="input-search high" value="Certificate" /> </form></td>
+            }
+            else {
+                <td></td>
+            }
+
+        </tr>
+    }
+</table>

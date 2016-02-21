@@ -1,0 +1,36 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Make Transaction";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Transation Manager</title>
+    <link href="@Url.Content("~/Content/Layout.css")" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div class="makeTrans">
+        <form method="post" action="/Home/MakeTransaction">
+            <fieldset>
+                <legend>Make transaction</legend> 
+                <table>
+                    
+                    <tr> <td>Your name: </td>
+                    <td><input type="text" name="sender" /> </td> </tr>
+                    <tr> <td>Recipient: </td><td><input type="text" name="receiver" /> </td> </tr>
+                    <tr> <td>Your bank number: </td><td><input type="number" name="bankNumberSender" /> </td> </tr>
+                    <tr> <td>Email: </td><td><input type="email" name="emailSender" /> </td> </tr>
+                    <tr> <td>Phone: </td><td><input type="tel" name="phoneSender" /> </td> </tr>
+                    <tr> <td><input type="submit" value="Send" /> </td>
+                     <td></td>
+                    </tr>
+
+</table>
+            </fieldset>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,70 @@
+﻿@model TransactionBelk.Models.Transaction
+
+@{
+    
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+    <div class="makeTrans">
+        <fieldset>
+            <legend>Edit transaction</legend>
+            <form method="post" action="/Home/EditTransaction">
+
+               
+                <table id="editTable">
+                    @Html.HiddenFor(model => model.id)
+                    <tr>
+                        <td><div class="formLabel"> Sender: </div></td>
+                        <td><input type="text" name="sender" value="@Model.sender" /> </td>
+                    </tr>
+                    <tr> <td><div class="formLabel"> Recipient: </div></td><td><input type="text" name="receiver" value="@Model.receiver" /> </td> </tr>
+                    <tr> <td><div class="formLabel"> Bank number: </div></td><td><input type="number" name="bankNumberSender" value="@Model.bankNumberSender" /> </td> </tr>
+                    <tr> <td><div class="formLabel"> Email: </div></td><td><input type="email" name="emailSender" value="@Model.emailSender" /> </td> </tr>
+                    <tr> <td><div class="formLabel"> Phone: </div></td><td><input type="tel" name="phoneSender" value="@Model.phoneSender" /> </td> </tr>
+                    <tr> <td><div class="formLabel"> Status: </div> </td><td><input type="text" name="TransactionStatus" value="@Model.TransactionStatus.label" readonly /></td></tr>
+                    <tr> <td><div class="formLabel"> Created: </div> </td><td><input type="text" name="createdTimestamp" value="@Model.createdTimestamp" readonly /></td></tr>
+                    <tr> <td> <div class="formLabel"> Certificate uploaded: </div> </td> 
+                    <td>
+                        @if (Model.approvalCertificate != null) {
+                            <span>Yes </span>
+                                } else {
+                            <span>No</span>
+                                }
+                        </td></tr>
+                    @if (ViewBag.isApprover)
+                    {
+                        <tr>
+                            <td><div class="redButtonWhite"><a href="@Url.Action("CancelTransaction", "Home", new { id = Model.id.ToString() })">Cancel</a></div> </td>
+                            <td><div class="redButton"><a href="@Url.Action("ApproveTransaction", "Home", new { id = Model.id.ToString() })">Approve</a></div> </td>
+                        </tr>
+
+                    }
+                    <tr>
+                        <td><div class="redButton"><a href="@Url.Action("DeleteTransaction", "Home", new { id = Model.id.ToString()})">Delete</a></div> </td>
+                        <td><input type="submit" value="Submit" class="submitEdit"/> </td>
+                    </tr>
+                </table>
+                @*@if (ViewBag.isApprover)
+                { <div id="approve">
+                      <div>Cancel</div>
+                 <div> Approve </div>
+                 </div>
+                }*@
+            </form>
+
+            @if (ViewBag.isApprover)
+            {    
+                using (Html.BeginForm("UploadFile", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    @Html.HiddenFor(model => model.id)
+                    <div>
+                        <input type="file" name="upload" class="submitUpload"/><br>
+                        <input type="submit" value="Upload certificate" class="submitUpload"/>
+                    </div>
+                }
+            }
+        </fieldset>
+
+    </div>

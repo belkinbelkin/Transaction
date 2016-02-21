@@ -1,0 +1,107 @@
+﻿<!DOCTYPE html>
+<html lang="en-us" ng-app="belkApp">
+<head>
+    <meta charset="utf-8" />
+    <title>Transaction Manager</title>
+    <link href="@Url.Content("~/Content/Layout.css")" rel="stylesheet" type="text/css" />
+    <link href='http://fonts.googleapis.com/css?family=Oswald&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <script src="@Url.Content("~/Scripts/angular.min.js")"> </script>
+    <!--script src = "js/lib/angular-route.min.js"> </script-->
+    <script src="@Url.Content("~/Scripts/belkApp.js")"> </script>
+    @*@Scripts.Render("~bundles/belkApp")*@
+    <!--script> var belkApp = angular.module('belkApp')  </script-->
+
+</head>
+
+<body ng-controller="menuController" style='width: {{wide}}'>
+    @*<div class="navig">
+        Transaction Manager 9000
+    </div>*@
+   
+
+    <div class='wrapper' style='width: {{wide}}'>
+        <div id=navigation-closed>
+            <img ng-show="!menuIsOpened" ng-click="openMenu()" class="none logo" src="@Url.Content("~/Scripts/img/logowhite.png")"/>
+            <img ng-show="menuIsOpened" ng-click="closeMenu()" class="none logo-opened" src="@Url.Content("~/Scripts/img/hambwite.png")" />
+        </div>
+                @RenderBody()
+        </div>
+
+    <script>
+        var belkApp = angular.module('belkApp', []);
+
+
+        var menuController = belkApp.controller('menuController', function ($rootScope, $scope, $document, $window, $http, $sce) {
+
+            function getCookie(name) {
+                var matches = document.cookie.match(new RegExp(
+                  "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+                ));
+                return matches ? decodeURIComponent(matches[1]) : undefined;
+            }
+
+            var loginString = (getCookie('token') != "") ? "<a href = '/Home/Logout'>LOG OUT </a><li><a href = '/Home/Transactions'>VIEW TRANSACTIONS</a></li>" : "<a href = '/Home/Login'>LOG IN </a>";
+            $scope.menu = "<ul class = 'ulMenu' ><li> <a href ='/Home/Index'> HOME </a></li><li>" + loginString + "</li><li> <a href = '/Home/MakeTransaction'> MAKE TRANSACTION </li></ul>";
+            $scope.social = '<div id = "sociallogos"><ul><li><a href= "https://www.facebook.com/dmitry.belkin1"><img src = "/Scripts/img/fblogo2.png"></a> </li><li><a href= "https://www.vk.com/belkinbelkin"><img src = "/Scripts/img/vk.png"></a></li><li><a href= "https://www.twitter.com/belkindmitry"><img src = "/Scripts/img/twitlogo.png"></a> </li><li><a href= "https://www.instagram.com/belkinbelkin"><img src = "/Scripts/img/instlogo2.png"></a> </li></ul></div><footer id = "footer"></footer>';
+
+            var flag = false;
+            $scope.menuIsOpened = flag;
+
+            $rootScope.wide = $window.innerWidth * 2 + 'px';
+
+
+            $scope.openMenu = function () {
+                var menuButton = angular.element(document.querySelector(".logo"));
+                menuButton.addClass("rotate360cw");
+                var miniMenu = angular.element(document.querySelector("#navigation-closed"));
+                console.log($scope.menu);
+                miniMenu.attr('id', "navigation-open").append($scope.menu).append($scope.social);
+
+                setTimeout(function () {
+                    menuButton.removeClass('rotate360cw');
+                    $scope.menuIsOpened = !flag;
+                    $scope.$apply();
+                }, 300);
+
+            };
+
+            $scope.openLogin = function () {
+                var wrapper = angular.element(document.querySelector(".wrapper"));
+                
+                $http.get('/Home/Login').success(function (data) {
+                    console.log(data);
+                    $scope.loginDiv = $sce.trustAsHtml(data);
+                    console.log(data);
+                    });
+                    
+                //wrapper.append($scope.loginDiv);
+                //$scope.$apply();
+            };
+
+            $scope.closeMenu = function () {
+                var menuhamButton = angular.element(document.querySelector(".logo-opened"));
+                menuhamButton.addClass("rotate360cw");
+                var maxiMenu = angular.element(document.querySelector("#navigation-open"));
+                var ulToRemove = angular.element(document.querySelector(".ulMenu"));
+                maxiMenu.attr('id', "navigation-closed");
+                ulToRemove.remove(ulToRemove);
+                var footer = angular.element(document.querySelector("#footer"));
+                footer.remove();
+                var socialicons = angular.element(document.querySelector("#sociallogos"));
+                socialicons.remove();
+
+                setTimeout(function () {
+                    menuhamButton.removeClass("rotate360cw");
+                    $scope.menuIsOpened = flag;
+                    $scope.$apply();
+                }, 300);
+
+            };
+
+        });
+
+      menuController.$inject = ['$scope'];
+    </script>
+</body>
+
+</html>

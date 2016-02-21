@@ -1,0 +1,114 @@
+﻿
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Transactions Table";
+
+}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Transation Manager</title>
+    <link href="@Url.Content("~/Content/Layout.css")" rel="stylesheet" type="text/css" />
+
+
+</head>
+<body>
+
+    <div class="tableTrans">
+        <fieldset>
+            <legend align="right">List of transactions</legend>
+            <table id="upperTable" class="tabletransfix">
+                <tr>
+                    <td class="emailwide">Sender</td>
+                    <td class="emailwide">Recipient</td>
+                    <td class="emailwide">Bank number</td>
+                    <td class="emailwide">Email</td>
+                    <td>Phone</td>
+                    <td>Approved by</td>
+                    <td class="datewide">Date approved</td>
+                    <td>Status</td>
+                    <td class="datewide">Date created</td>
+                </tr>
+                <tr>
+                    @using (Ajax.BeginForm("FilterTransactions", new AjaxOptions { UpdateTargetId = "lowerTable" }))
+                    {
+                        <td class="emailwide"><input class="input-search emailwide" type="text" name="findBySender" /> </td>
+                            <td class="emailwide"><input class="input-search emailwide" type="text" name="findByRecipient" /> </td>
+                            <td class="emailwide"><input class="input-search emailwide" type="text" name="findByBankNumber" /> </td>
+                            <td><input class="input-search emailwide" type="text" name="findByEmail" /> </td>
+                            <td><input class="input-search" type="text" name="findByPhone" /> </td>
+                            <td><input class="input-search" type="text" name="findByApprovedBy" /> </td>
+                            <td><div class="datewide"><input class="input-search smalldate" type="date" name="ApprDateFrom" /> <input class="input-search smalldate" type="date" name="ApprDateTo" /></div></td>
+                            <td>
+                                <select name="findByStatus">
+                                    <option value="0"></option> 
+                                    @foreach (var status in ViewBag.statuses)
+                                    {
+                                        <option value="@status.id">@status.label</option>
+                                    }
+                                </select>
+                            </td>
+                            <td><div class="datewide"><input class="input-search smalldate" type="date" name="CreateDateFrom" /> <input class="input-search smalldate" type="date" name="CreateDateTo" /></div></td>
+                            <td><input class="input-search" type="submit" value="Search" /> </td>
+                    }
+                </tr>
+            </table>
+
+            <table id="lowerTable" class="tabletransfix">
+                @foreach (var transaction in ViewBag.transactions)
+                {
+
+                    <tr>
+                        <td class="emailwide">@transaction.sender</td>
+                        <td class="emailwide">@transaction.receiver</td>
+                        <td class="emailwide">@transaction.bankNumberSender</td>
+                        <td class="emailwide">@transaction.emailSender</td>
+                        <td>@transaction.phoneSender</td>
+                        @if (transaction.User != null)
+                        {
+                            <td>@transaction.User.name</td>
+                            <td class="datewide">@transaction.approvalTimestamp</td>
+                        }
+                        else {
+                            <td></td>
+                                <td class="datewide"></td>
+                        }
+                        @if (transaction.TransactionStatus != null)
+                        {
+                            <td>@transaction.TransactionStatus.label</td>
+                        }
+                        else {
+                            <td> </td>
+                        }
+                        <td class="datewide">@transaction.createdTimestamp</td>
+                        @if (ViewBag.editable || ViewBag.isApprover)
+                        {
+                            @*<td> <a class ="blackLink" href="@Url.Action("EditTransaction", "Home", new { id = transaction.id.ToString()})">Edit</a> </td>*@
+
+                        if (transaction.TransactionStatus.code == 1)
+                        {
+                                <td><form method="get" action="/Home/EditTransaction/@transaction.id"><input type="submit" class="input-search high" value="Edit" /> </form></td>
+                        }
+                        else if (transaction.TransactionStatus.code == 3)
+                        {
+                            <td><form method="get" action="/Home/GetFile/@transaction.id"><input type="submit" class="input-search high" value="Certificate" /> </form></td>
+                        }
+                        else {
+                            <td></td>
+                            }
+                        }
+                        else {<td> </td>}
+                    </tr>
+                }
+            </table>
+        </fieldset>
+    </div>
+
+    @Scripts.Render("~/Scripts/jquery-1.8.0.min.js")
+    @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")
+</body>
+</html>

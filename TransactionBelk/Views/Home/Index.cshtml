@@ -1,0 +1,26 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Transation Manager</title>
+</head>
+<body>
+    <div>
+        <div id="intro">
+            @ViewBag.Hi
+        </div>
+        <div id=triangle-right> </div>
+    </div>
+    <script> 
+        var div = document.getElementById('triangle-right');
+        div.onclick = function () {
+            location.href = "/Home/Transactions";
+        }
+    </script>
+</body>
+</html>
