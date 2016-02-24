@@ -15,7 +15,7 @@ namespace TransactionBelk
         protected void Application_Start()
         {
             //Database.SetInitializer(new StatusInit());
-            Database.SetInitializer<TransactionContext>(null);
+           //Database.SetInitializer<TransactionContext>(null);
 
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
