@@ -83,6 +83,7 @@ namespace TransactionBelk.Controllers
 
 
         public ActionResult Transactions() {
+            try {
             if (isAuthorized()) {
                 ViewBag.editable = isEditor();
                 ViewBag.isApprover = isApprover();
@@ -91,6 +92,10 @@ namespace TransactionBelk.Controllers
                 ViewBag.transactions = db.transactions.Include(arg => arg.TransactionStatus).Include(arg=>arg.User).Where(arg => arg.isDeleted == false).Take(100).OrderByDescending(arg => arg.createdTimestamp).ToList();
                 return View();
             }      else {
+                return Redirect("/Home/Login");
+            }
+            } 
+            catch(Exception ex) {
                 return Redirect("/Home/Login");
             }
         }
