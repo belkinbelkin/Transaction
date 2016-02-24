@@ -9,7 +9,7 @@ namespace TransactionBelk.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = true;
+            AutomaticMigrationsEnabled = false;
         }
 
         protected override void Seed(TransactionBelk.Models.TransactionContext context)
