@@ -21,7 +21,7 @@ namespace TransactionBelk
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-            Database.SetInitializer<TransactionContext>(null);
+            Database.SetInitializer<TransactionContext>(new DropCreateDatabaseIfModelChanges<TransactionContext>());
         }
     }
 }
